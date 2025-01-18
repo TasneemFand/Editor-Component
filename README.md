@@ -1,1 +1,1 @@
-# -Editor-Component
+# Editor Component
