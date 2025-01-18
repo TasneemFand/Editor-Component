@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { EditorState, RichUtils } from "draft-js";
+import { ContentBlock, EditorState, RichUtils } from "draft-js";
 
 export const useEditorStyles = (editorState: EditorState, handleChange: (state: EditorState) => void) => {
   const toggleInlineStyle = useCallback(
@@ -15,6 +15,14 @@ export const useEditorStyles = (editorState: EditorState, handleChange: (state: 
     },
     [editorState, handleChange]
   );
+  const getBlockStyle = (block: ContentBlock): string => {
+    switch (block.getType()) {
+      case "blockquote":
+        return "RichEditor-blockquote";
+      default:
+        return "";
+    }
+  }
 
-  return { toggleInlineStyle, toggleBlockType };
+  return { toggleInlineStyle, toggleBlockType, getBlockStyle };
 };

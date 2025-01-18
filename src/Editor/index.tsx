@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ContentBlock, Editor, EditorState } from "draft-js";
+import React, { useCallback, useMemo, useState } from "react";
+import { Editor, EditorState } from "draft-js";
 import "draft-js/dist/Draft.css";
 import "./style.css";
 import { GenericRichEditorProps } from "../types";
@@ -14,18 +14,21 @@ export const GenericRichEditor: React.FC<GenericRichEditorProps> = ({
   className = "",
   style = {},
 }) => {
-  const [editorState, setEditorState] = useState(
+  const [internalState, setinternalState] = useState(
     value || EditorState.createEmpty()
   );
 
-  const handleChange = (state: EditorState) => {
+  const editorState = value ?? internalState;
+
+  const handleChange = useCallback((state: EditorState) => {
     if (onChange) {
       onChange(state);
     } else {
-      setEditorState(state);
+      setinternalState(state);
     }
-  };
-  const { toggleInlineStyle, toggleBlockType } = useEditorStyles(
+  }, [onChange]);
+
+  const { toggleInlineStyle, toggleBlockType, getBlockStyle } = useEditorStyles(
     editorState,
     handleChange
   );
@@ -39,21 +42,13 @@ export const GenericRichEditor: React.FC<GenericRichEditorProps> = ({
     },
   };
 
-  function getBlockStyle(block: ContentBlock): string {
-    switch (block.getType()) {
-      case "blockquote":
-        return "RichEditor-blockquote";
-      default:
-        return "";
-    }
-  }
-
-  const currentContent = editorState.getCurrentContent();
-  const hidePlaceHolder =
-    !currentContent.hasText() &&
-    currentContent.getBlockMap().first().getType() !== "unstyled"
+  const hidePlaceHolder = useMemo(() => {
+    const currentContent = editorState.getCurrentContent();
+    return !currentContent.hasText() &&
+      currentContent.getBlockMap().first().getType() !== "unstyled"
       ? "RichEditor-hidePlaceholder"
       : "";
+  }, [editorState]);
 
   return (
     <div className={`RichEditor-root`}>
