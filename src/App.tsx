@@ -1,9 +1,13 @@
-import {GenericRichEditor} from './Editor/index';
+import { DemoPage } from "./Demo";
 
 function App() {
- return (
-  <GenericRichEditor/>
- )
+  return (
+    <div style={{
+      padding: "1rem"
+    }}>
+      <DemoPage />
+    </div>
+  );
 }
 
-export default App
+export default App;
