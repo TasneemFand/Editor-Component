@@ -68,6 +68,7 @@ export const GenericRichEditor: React.FC<GenericRichEditorProps> = ({
       <div
         className={`${hidePlaceHolder} ${className || "RichEditor-editor"}`}
         style={style}
+        data-testid="editor-root"
       >
         <Editor
           blockStyleFn={getBlockStyle}
